@@ -23,6 +23,7 @@ HIGH_TERMS = (
 
 def recommend_priority(text: str) -> tuple[str, list[str]]:
     normalized = re.sub(r"\s+", " ", text.lower())
+    normalized = normalized.replace("card is blocked", "card blocked")
     reasons = [term for term in URGENT_TERMS if term in normalized]
     if "account was hacked" in normalized and "account hacked" not in reasons:
         reasons.append("account hacked")
