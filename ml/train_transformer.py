@@ -7,11 +7,18 @@ used only for the final evaluation at the end of training.
 import argparse
 import json
 from pathlib import Path
+
 import numpy as np
 from datasets import load_dataset
 from sklearn.metrics import accuracy_score, f1_score
-from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
-                          DataCollatorWithPadding, Trainer, TrainingArguments)
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    Trainer,
+    TrainingArguments,
+)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -24,8 +31,10 @@ def main():
     label_names = raw["train"].features["label"].names
     train_valid = raw["train"].train_test_split(test_size=0.1, seed=42, stratify_by_column="label")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+
     def tokenize(batch):
         return tokenizer(batch["text"], truncation=True, max_length=160)
+
     train_ds = train_valid["train"].map(tokenize, batched=True)
     valid_ds = train_valid["test"].map(tokenize, batched=True)
     test_ds = raw["test"].map(tokenize, batched=True)
@@ -63,6 +72,7 @@ def main():
                     "test_split":"official test split","metrics":final_metrics}, indent=2),
         encoding="utf-8")
     print(json.dumps(final_metrics, indent=2))
+
 
 if __name__ == "__main__":
     main()
