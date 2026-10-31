@@ -1,7 +1,7 @@
 # Development guide
 
 ## Environment
-Use Python 3.10 or newer. Create and activate a virtual environment, then install development dependencies:
+Use Python 3.10 or newer.
 
     python -m venv .venv
     source .venv/bin/activate
@@ -9,13 +9,21 @@ Use Python 3.10 or newer. Create and activate a virtual environment, then instal
 
 On Windows, activate with .venv\\Scripts\\activate.
 
-## Train
-Install the datasets dependency and run:
+## Classical baseline
+Install the dataset loader and train:
 
     pip install datasets
     python ml/train_baseline.py
 
-The script downloads Banking77 from Hugging Face and creates artifacts/intent_model.joblib and reports/baseline_metrics.json. Training may take several minutes depending on CPU and network.
+This downloads PolyAI Banking77 and creates artifacts/intent_model.joblib plus reports/baseline_metrics.json. Training may take several minutes depending on CPU and network.
+
+## Optional DistilBERT experiment
+Install the transformer extra:
+
+    pip install -e ".[transformers]"
+    python ml/train_transformer.py --epochs 2 --batch-size 16
+
+This experiment requires more compute, memory, disk space, and network access. See docs/transformer-experiment.md.
 
 ## Run
 Terminal 1:
@@ -31,4 +39,4 @@ Terminal 2:
     pytest
     ruff check .
 
-Do not commit the downloaded dataset, database, or generated model artifacts.
+Do not commit downloaded datasets, database files, credentials, or generated model artifacts.
