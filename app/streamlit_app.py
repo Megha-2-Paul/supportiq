@@ -13,6 +13,7 @@ st.set_page_config(
     layout="wide",
 )
 API = os.getenv("SUPPORTIQ_API_URL", "http://localhost:8000")
+CONFIDENCE_THRESHOLD = float(os.getenv("SUPPORTIQ_CONFIDENCE_THRESHOLD", "0.55"))
 st.markdown(
     """
     <style>
@@ -85,7 +86,7 @@ if page == "Overview":
             col2.metric("Most common intent", str(history["intent"].mode().iloc[0]))
             col3.metric(
                 "Human review flagged",
-                int((history["confidence"] < 0.55).sum()),
+                int((history["confidence"] < CONFIDENCE_THRESHOLD).sum()),
             )
             left, right = st.columns(2)
             with left:
