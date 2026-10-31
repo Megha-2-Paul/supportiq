@@ -109,6 +109,58 @@ st.markdown(
     [data-testid="stDataFrame"] { border: 1px solid var(--line); border-radius: 10px; }
     [data-testid="stAlert"] { border-radius: 10px; }
     hr { border-color: var(--line); }
+    /* Subtle motion: polished feedback without distracting from data. */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes softPulse {
+      0%, 100% { box-shadow: 0 3px 12px rgba(23,59,54,.04); }
+      50% { box-shadow: 0 7px 22px rgba(20,184,140,.12); }
+    }
+    @keyframes statusGlow {
+      0%, 100% { opacity: .72; }
+      50% { opacity: 1; }
+    }
+    .page-intro { animation: riseIn .48s ease-out both; }
+    [data-testid="stMetric"] {
+      animation: riseIn .55s ease-out both;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    [data-testid="stMetric"]:hover {
+      transform: translateY(-3px);
+      border-color: #9bbdaf;
+      animation: softPulse 2.4s ease-in-out infinite;
+    }
+    [data-testid="stVerticalBlockBorderWrapper"] {
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+      border-color: #b6cec0 !important;
+      box-shadow: 0 7px 20px rgba(23,59,54,.055);
+    }
+    div.stButton > button, [data-testid="stDownloadButton"] button {
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    div.stButton > button:hover, [data-testid="stDownloadButton"] button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 13px rgba(23,59,54,.12);
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] label {
+      transition: background .18s ease, transform .18s ease;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+      transform: translateX(3px);
+    }
+    [data-testid="stDataFrame"] { animation: riseIn .4s ease-out both; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
     footer { visibility: hidden; }
     </style>
     """,
