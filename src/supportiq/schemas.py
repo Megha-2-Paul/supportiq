@@ -23,6 +23,7 @@ class PredictionResponse(BaseModel):
     confidence: float = Field(ge=0, le=1)
     department: str
     priority: str
+    priority_reasons: list[str] = Field(default_factory=list)
     sentiment: str
     needs_human_review: bool
     model_version: str
