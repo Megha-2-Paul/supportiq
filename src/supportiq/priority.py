@@ -17,7 +17,6 @@ HIGH_TERMS = (
     "cannot access",
     "payment failed",
     "card blocked",
-    "card is blocked",
     "money missing",
 )
 
