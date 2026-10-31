@@ -4,8 +4,9 @@ Banking77 contains no sentiment labels. Configure SUPPORTIQ_SENTIMENT_MODEL to
 enable a separately sourced general sentiment model; domain validation is still
 required before operational use.
 """
-from functools import lru_cache
 import os
+from functools import lru_cache
+
 
 @lru_cache(maxsize=1)
 def _load_pipeline():
@@ -17,6 +18,7 @@ def _load_pipeline():
     except ImportError as exc:
         raise RuntimeError("Install the transformers extra to enable sentiment analysis") from exc
     return pipeline("sentiment-analysis", model=model_name)
+
 
 def analyze_sentiment(text: str) -> str:
     analyzer = _load_pipeline()
