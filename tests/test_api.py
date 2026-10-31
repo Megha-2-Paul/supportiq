@@ -59,3 +59,29 @@ def test_batch_prediction_returns_each_ticket():
 def test_batch_rejects_empty_ticket_list():
     response = make_client().post("/api/v1/predict/batch", json={"tickets": []})
     assert response.status_code == 422
+
+
+def test_history_rejects_out_of_range_limit():
+    response = make_client().get("/api/v1/history?limit=0")
+    assert response.status_code == 422
+
+
+def test_batch_rejects_configured_row_limit(monkeypatch):
+    monkeypatch.setenv("SUPPORTIQ_MAX_BATCH_ROWS", "1")
+    response = make_client().post(
+        "/api/v1/predict/batch",
+        json={"tickets": [{"text": "Cash was not dispensed"}, {"text": "Need cash help"}]},
+    )
+    assert response.status_code == 413
+
+
+def test_batch_converts_classifier_value_error_to_422():
+    class InvalidService(FakeService):
+        def classify(self, text):
+            raise ValueError("Invalid message")
+
+    response = TestClient(create_app(InvalidService())).post(
+        "/api/v1/predict/batch",
+        json={"tickets": [{"text": "Cash was not dispensed"}]},
+    )
+    assert response.status_code == 422
