@@ -2,10 +2,25 @@
 import re
 
 URGENT_TERMS = (
-    "fraud", "stolen", "unauthorized", "account hacked", "account was hacked",
-    "hacked", "account compromised", "scam", "security breach",
+    "fraud",
+    "stolen",
+    "unauthorized",
+    "account hacked",
+    "account was hacked",
+    "hacked",
+    "account compromised",
+    "scam",
+    "security breach",
 )
-HIGH_TERMS = ("locked out", "cannot access", "payment failed", "card blocked", "money missing")
+HIGH_TERMS = (
+    "locked out",
+    "cannot access",
+    "payment failed",
+    "card blocked",
+    "card is blocked",
+    "money missing",
+)
+
 
 def recommend_priority(text: str) -> tuple[str, list[str]]:
     normalized = re.sub(r"\s+", " ", text.lower())
