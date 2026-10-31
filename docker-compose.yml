@@ -7,6 +7,9 @@ services:
     volumes:
       - "./artifacts:/app/artifacts"
       - "./data:/app/data"
+      - "./reports:/app/reports"
+    environment:
+      SUPPORTIQ_DATABASE_PATH: /app/data/supportiq.db
     healthcheck:
       test:
         - CMD
@@ -23,6 +26,9 @@ services:
     command: streamlit run app/streamlit_app.py --server.address 0.0.0.0
     ports:
       - "8501:8501"
+    volumes:
+      - "./reports:/app/reports"
+      - "./data:/app/data"
     depends_on:
       api:
         condition: service_healthy
