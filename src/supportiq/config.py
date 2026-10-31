@@ -17,8 +17,8 @@ class Settings:
         max_rows = int(os.getenv("SUPPORTIQ_MAX_BATCH_ROWS", "1000"))
         if not 0 <= threshold <= 1:
             raise ValueError("SUPPORTIQ_CONFIDENCE_THRESHOLD must be between 0 and 1")
-        if max_rows < 1:
-            raise ValueError("SUPPORTIQ_MAX_BATCH_ROWS must be positive")
+        if not 1 <= max_rows <= 1000:
+            raise ValueError("SUPPORTIQ_MAX_BATCH_ROWS must be between 1 and 1000")
         return cls(
             environment=os.getenv("SUPPORTIQ_ENV", "development"),
             database_path=os.getenv("SUPPORTIQ_DATABASE_PATH", "supportiq.db"),
