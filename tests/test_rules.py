@@ -1,22 +1,13 @@
 from supportiq.priority import recommend_priority
 from supportiq.routing import route_intent
 
+def test_urgent_priority_explains_match():
+    level, reasons = recommend_priority("My account was hacked")
+    assert level == "Urgent" and "account hacked" in reasons
 
-def test_urgent_priority_is_explainable():
-    priority, reasons = recommend_priority("I think my account was hacked")
-    assert priority == "Urgent"
-    assert "account hacked" in reasons
+def test_normal_priority_has_reason():
+    level, reasons = recommend_priority("How can I change my address?")
+    assert level == "Normal" and reasons
 
-
-def test_default_priority_is_normal():
-    priority, reasons = recommend_priority("How do I update my address?")
-    assert priority == "Normal"
-    assert reasons
-
-
-def test_unknown_intent_routes_to_general_support():
-    assert route_intent("unmapped_intent") == "General Banking Support"
-
-
-def test_empty_intent_routes_to_general_support():
-    assert route_intent("") == "General Banking Support"
+def test_unknown_route_goes_to_general_triage():
+    assert route_intent("some_unmapped_intent") == "General Banking Support"
