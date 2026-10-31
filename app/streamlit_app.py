@@ -194,9 +194,6 @@ if page == "Overview":
                 "sample ticket or uploading a small demo CSV. Your dashboard "
                 "metrics will populate from actual local prediction history."
             )
-            if st.button("Go to ticket analysis", type="primary"):
-                st.session_state["workspace_page"] = "Classify a ticket"
-                st.rerun()
         else:
             total = len(history)
             review_count = int(
@@ -221,7 +218,7 @@ if page == "Overview":
                 st.markdown("### Intent landscape")
                 st.caption("Most frequent predicted intents in local history")
                 intent_counts = history["intent"].value_counts().head(10)
-                st.bar_chart(intent_counts, color="#527d6d", horizontal=True)
+                st.bar_chart(intent_counts, color="#527d6d")
             with right:
                 st.markdown("### Priority mix")
                 st.caption("Rule-based priority recommendations")
