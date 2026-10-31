@@ -1,16 +1,20 @@
-# Architecture
+# Architecture and design
 
-SupportIQ accepts a ticket from the Streamlit UI, CSV/XLSX batch flow, or FastAPI. Input is validated before an intent model is invoked. The prediction layer returns an intent label and an available confidence estimate, then separate decision modules recommend a department and rules-based priority. Sentiment is explicitly marked not configured until a separately sourced and evaluated sentiment model is selected.
+## Request lifecycle
+1. A message enters through Streamlit or the FastAPI contract.
+2. Pydantic validates type and length; the service rejects blank or too-short messages.
+3. A persisted scikit-learn pipeline predicts a Banking77 intent.
+4. The application returns the predicted intent and the model's maximum class probability when supported. This score is not automatically calibrated.
+5. Separate decision modules recommend a support department and rules-based urgency.
+6. Sentiment remains explicitly unavailable unless a separate sentiment model is configured.
+7. SQLite records the result for local demo history.
 
-The application separates model code, business rules, storage, API contracts, and UI. SQLite stores prediction history for local demonstration. Training and evaluation are kept separate from serving code.
+## Model development
+The baseline uses TF-IDF word unigrams/bigrams and Logistic Regression. Training uses the upstream Banking77 train split; evaluation uses its official test split. Report accuracy, macro-F1, weighted-F1, and per-class precision/recall/F1. Do not use the test split for tuning. A future DistilBERT experiment must split validation data from the training split and only evaluate the final candidate once on the official test set.
 
-## Model evaluation
-
-The baseline training script uses the official Banking77 train/test split. Report accuracy, macro-F1, weighted-F1, and per-class precision/recall/F1. The test split must not be used for hyperparameter selection. Any transformer candidate must use a validation split derived only from training data, then be evaluated once on the official test split. Compare runtime and model size as well as predictive metrics.
-
-## Limitations
-
-- Banking77 represents banking queries and intents, not a production bank's private ticket stream.
-- Dataset labels contain no priority or sentiment targets.
-- Confidence from a classifier is not inherently calibrated; low or missing confidence must trigger human review.
-- Routing and priority rules are illustrative and require institution-specific governance before any operational use.
+## Design choices
+- Keep training code separate from inference code.
+- Keep routing and priority logic deterministic, inspectable, and independently tested.
+- Use a human-review flag for low confidence or unavailable confidence.
+- Store only local demo history; this is not a production retention or access-control design.
+- Do not silently replace a missing model with fabricated predictions.
