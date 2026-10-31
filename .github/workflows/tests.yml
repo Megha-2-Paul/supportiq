@@ -57,7 +57,16 @@ jobs:
             sleep 2
           done
           curl --fail --silent http://localhost:8000/health
-          curl --fail --silent http://localhost:8501/_stcore/health
+          dashboard_healthy=false
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:8501/_stcore/health -o /tmp/dashboard-health; then
+              dashboard_healthy=true
+              break
+            fi
+            sleep 2
+          done
+          test "$dashboard_healthy" = true
+          cat /tmp/dashboard-health
       - name: Show container logs on failure
         if: failure()
         run: docker compose logs
