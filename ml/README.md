@@ -1,0 +1,3 @@
+# Model training
+
+Install the optional training dependency with `pip install -e '.[transformers,dev]'`. Then run `python ml/train_baseline.py`. The script downloads the upstream PolyAI Banking77 dataset, trains TF-IDF + Logistic Regression on its official train split, evaluates once on the official test split, and writes a Joblib artifact plus a JSON report. Do not tune against the test split. Record the dataset revision, license, package versions, and metrics when publishing a trained artifact. Transformer fine-tuning is a planned experiment and should use a validation split drawn from training data before one final test evaluation.
