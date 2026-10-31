@@ -55,11 +55,11 @@ def main():
     training_args = TrainingArguments(
         output_dir=args.output, learning_rate=2e-5, per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size, num_train_epochs=args.epochs,
-        weight_decay=0.01, evaluation_strategy="epoch", save_strategy="epoch",
+        weight_decay=0.01, eval_strategy="epoch", save_strategy="epoch",
         load_best_model_at_end=True, metric_for_best_model="macro_f1",
         greater_is_better=True, logging_steps=100, report_to="none", seed=42)
     trainer = Trainer(model=model, args=training_args, train_dataset=train_ds,
-                      eval_dataset=valid_ds, tokenizer=tokenizer,
+                      eval_dataset=valid_ds, processing_class=tokenizer,
                       data_collator=DataCollatorWithPadding(tokenizer), compute_metrics=metrics)
     trainer.train()
     final_metrics = trainer.evaluate(test_ds, metric_key_prefix="test")
