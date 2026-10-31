@@ -2,12 +2,14 @@
 import argparse
 import json
 from pathlib import Path
+
 import joblib
 from datasets import load_dataset
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, f1_score
 from sklearn.pipeline import Pipeline
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -37,6 +39,7 @@ def main():
     joblib.dump(model, out)
     report.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     print(json.dumps({k: v for k, v in metrics.items() if k != "classification_report"}, indent=2))
+
 
 if __name__ == "__main__":
     main()
