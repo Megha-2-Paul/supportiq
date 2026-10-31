@@ -57,8 +57,7 @@ python -m venv .venv
 source .venv/bin/activate
 # Windows PowerShell: .venv\\Scripts\\Activate.ps1
 
-pip install -e ".[dev]"
-pip install datasets
+pip install -e ".[dev,training]"
 python ml/train_baseline.py
 ```
 
