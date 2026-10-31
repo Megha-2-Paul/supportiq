@@ -36,3 +36,31 @@ jobs:
         run: python -m compileall -q src api app ml tests
       - name: Run test suite
         run: pytest
+
+  docker-smoke:
+    name: Docker Compose smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Validate Compose configuration
+        run: docker compose config --quiet
+      - name: Build and start API and dashboard
+        run: docker compose up --build --detach
+      - name: Verify API and dashboard health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:8000/health; then
+              break
+            fi
+            sleep 2
+          done
+          curl --fail --silent http://localhost:8000/health
+          curl --fail --silent http://localhost:8501/_stcore/health
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose logs
+      - name: Stop containers
+        if: always()
+        run: docker compose down --remove-orphans
