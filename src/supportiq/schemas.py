@@ -27,3 +27,7 @@ class PredictionResponse(BaseModel):
     sentiment: str
     needs_human_review: bool
     model_version: str
+
+
+class BatchPredictionResponse(BaseModel):
+    results: list[PredictionResponse]
