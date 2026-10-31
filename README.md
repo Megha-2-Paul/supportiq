@@ -29,9 +29,9 @@ CSV / Excel / Streamlit
           |
           v
    SupportIQ service
-     /     |      \\
- NLP    Routing  Priority
- model   rules    rules
+      |      |       |
+     NLP   Routing Priority
+    model   rules    rules
           |
           v
     SQLite history
