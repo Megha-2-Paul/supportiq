@@ -29,3 +29,9 @@ def test_settings_reject_non_positive_batch_limit(monkeypatch, value):
 
     with pytest.raises(ValueError):
         Settings.from_env()
+
+def test_settings_reject_batch_limit_above_schema_max(monkeypatch):
+    monkeypatch.setenv("SUPPORTIQ_MAX_BATCH_ROWS", "1001")
+
+    with pytest.raises(ValueError):
+        Settings.from_env()
